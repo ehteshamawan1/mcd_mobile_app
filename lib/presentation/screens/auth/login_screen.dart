@@ -63,13 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final success = await authProvider.login(
       _cnicController.text,
       _phoneController.text,
+      selectedRole: widget.selectedRole,
     );
 
     if (!mounted) return;
 
     if (success) {
-      // Navigate to appropriate dashboard based on role
-      switch (authProvider.user!.role) {
+      // Navigate to appropriate dashboard based on selected role
+      switch (widget.selectedRole) {
         case UserRole.imam:
           context.go('/imam/dashboard');
           break;

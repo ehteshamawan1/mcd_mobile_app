@@ -18,6 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   
   CaseType? _selectedType;
   String? _selectedLocation;
+  CaseStatus? _selectedStatus;
   bool _showFilters = false;
   
   @override

@@ -93,6 +93,27 @@ class DonationProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> makeDonation(DonationModel donation) async {
+    _isProcessing = true;
+    _errorMessage = '';
+    notifyListeners();
+
+    try {
+      // Simulate payment processing
+      await Future.delayed(const Duration(seconds: 3));
+      
+      _donations.add(donation);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorMessage = 'Payment processing failed: $e';
+      return false;
+    } finally {
+      _isProcessing = false;
+      notifyListeners();
+    }
+  }
+
   void loadMockDonations() {
     _donations.addAll([
       DonationModel(

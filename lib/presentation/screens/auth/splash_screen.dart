@@ -48,10 +48,17 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigateToNextScreen() async {
+    // Wait for animation and minimum splash time
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    
+    // Wait for auth provider to initialize
+    while (!authProvider.isInitialized) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (!mounted) return;
+    }
     
     if (authProvider.isAuthenticated && authProvider.user != null) {
       // Navigate to appropriate dashboard based on role
