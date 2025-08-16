@@ -4,6 +4,7 @@ class DonationModel extends Equatable {
   final String id;
   final String donorId;
   final String caseId;
+  final String? caseName;
   final double amount;
   final DateTime timestamp;
   final String paymentMethod;
@@ -14,6 +15,7 @@ class DonationModel extends Equatable {
     required this.id,
     required this.donorId,
     required this.caseId,
+    this.caseName,
     required this.amount,
     required this.timestamp,
     required this.paymentMethod,
@@ -26,6 +28,7 @@ class DonationModel extends Equatable {
       id: json['id'] as String,
       donorId: json['donorId'] as String,
       caseId: json['caseId'] as String,
+      caseName: json['caseName'] as String?,
       amount: (json['amount'] as num).toDouble(),
       timestamp: DateTime.parse(json['timestamp'] as String),
       paymentMethod: json['paymentMethod'] as String,
@@ -39,6 +42,7 @@ class DonationModel extends Equatable {
       'id': id,
       'donorId': donorId,
       'caseId': caseId,
+      'caseName': caseName,
       'amount': amount,
       'timestamp': timestamp.toIso8601String(),
       'paymentMethod': paymentMethod,
@@ -51,6 +55,7 @@ class DonationModel extends Equatable {
     String? id,
     String? donorId,
     String? caseId,
+    String? caseName,
     double? amount,
     DateTime? timestamp,
     String? paymentMethod,
@@ -61,6 +66,7 @@ class DonationModel extends Equatable {
       id: id ?? this.id,
       donorId: donorId ?? this.donorId,
       caseId: caseId ?? this.caseId,
+      caseName: caseName ?? this.caseName,
       amount: amount ?? this.amount,
       timestamp: timestamp ?? this.timestamp,
       paymentMethod: paymentMethod ?? this.paymentMethod,
@@ -74,6 +80,7 @@ class DonationModel extends Equatable {
         id,
         donorId,
         caseId,
+        caseName,
         amount,
         timestamp,
         paymentMethod,

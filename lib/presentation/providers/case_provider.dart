@@ -7,6 +7,7 @@ class CaseProvider extends ChangeNotifier {
   
   List<CaseModel> _cases = [];
   List<CaseModel> _filteredCases = [];
+  List<CaseModel> _userCases = [];
   bool _isLoading = false;
   String _errorMessage = '';
   
@@ -18,6 +19,7 @@ class CaseProvider extends ChangeNotifier {
 
   List<CaseModel> get cases => _filteredCases.isEmpty ? _cases : _filteredCases;
   List<CaseModel> get allCases => _cases;
+  List<CaseModel> get userCases => _userCases;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
   CaseType? get selectedType => _selectedType;
@@ -55,6 +57,21 @@ class CaseProvider extends ChangeNotifier {
 
   List<CaseModel> getCasesByUserId(String userId) {
     return _cases.where((c) => c.beneficiaryId == userId).toList();
+  }
+
+  Future<void> loadUserCases(String userId) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+      _userCases = _cases.where((c) => c.beneficiaryId == userId).toList();
+    } catch (e) {
+      _errorMessage = 'Failed to load user cases: $e';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   List<CaseModel> getCasesByMosqueId(String mosqueId) {

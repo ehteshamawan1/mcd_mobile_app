@@ -90,11 +90,11 @@ class _SplashScreenState extends State<SplashScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 120,
-                  height: 120,
+                  width: 150,
+                  height: 150,
                   decoration: BoxDecoration(
                     color: AppTheme.whiteColor,
-                    borderRadius: BorderRadius.circular(60),
+                    borderRadius: BorderRadius.circular(75),
                     boxShadow: [
                       BoxShadow(
                         color: ColorUtils.withOpacity(Colors.black, 0.2),
@@ -103,10 +103,12 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.favorite,
-                    size: 60,
-                    color: AppTheme.primaryColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30),

@@ -7,9 +7,9 @@ import '../../presentation/screens/auth/role_selection_screen.dart';
 import '../../presentation/screens/auth/login_screen.dart';
 import '../../presentation/screens/auth/register_screen.dart';
 import '../../presentation/screens/auth/otp_verification_screen.dart';
-import '../../presentation/screens/imam/imam_dashboard_screen.dart';
-import '../../presentation/screens/donor/donor_dashboard_screen.dart';
-import '../../presentation/screens/beneficiary/beneficiary_dashboard_screen.dart';
+import '../../presentation/screens/imam/imam_main_screen.dart';
+import '../../presentation/screens/donor/donor_main_screen.dart';
+import '../../presentation/screens/beneficiary/beneficiary_main_screen.dart';
 import '../../data/models/user_model.dart';
 
 class AppRouter {
@@ -88,19 +88,19 @@ class AppRouter {
         // Imam Routes
         GoRoute(
           path: '/imam/dashboard',
-          builder: (context, state) => const ImamDashboardScreen(),
+          builder: (context, state) => const ImamMainScreen(),
         ),
         
         // Donor Routes
         GoRoute(
           path: '/donor/dashboard',
-          builder: (context, state) => const DonorDashboardScreen(),
+          builder: (context, state) => const DonorMainScreen(),
         ),
         
         // Beneficiary Routes
         GoRoute(
           path: '/beneficiary/dashboard',
-          builder: (context, state) => const BeneficiaryDashboardScreen(),
+          builder: (context, state) => const BeneficiaryMainScreen(),
         ),
       ],
     );
