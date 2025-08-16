@@ -20,6 +20,12 @@ class ImamDashboardScreen extends StatelessWidget {
         backgroundColor: AppTheme.primaryColor,
         actions: [
           IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              context.push('/imam/notifications');
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await authProvider.logout();
@@ -43,7 +49,7 @@ class ImamDashboardScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
                         'Assalam-o-Alaikum',

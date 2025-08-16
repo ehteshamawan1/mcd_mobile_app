@@ -12,11 +12,18 @@ import '../../presentation/screens/imam/case_details_screen.dart';
 import '../../presentation/screens/imam/create_case_screen.dart';
 import '../../presentation/screens/imam/edit_case_screen.dart';
 import '../../presentation/screens/imam/beneficiary_verification_screen.dart';
+import '../../presentation/screens/imam/imam_notifications_screen.dart';
 import '../../presentation/screens/donor/donor_main_screen.dart';
+import '../../presentation/screens/donor/donor_notifications_screen.dart';
+import '../../presentation/screens/donor/browse_cases_screen.dart';
+import '../../presentation/screens/donor/donation_history_screen.dart';
+import '../../presentation/screens/beneficiary/beneficiary_notifications_screen.dart';
 import '../../presentation/screens/donor/case_details_screen.dart';
 import '../../presentation/screens/donor/donation_screen.dart';
 import '../../presentation/screens/beneficiary/beneficiary_main_screen.dart';
 import '../../presentation/screens/beneficiary/case_progress_screen.dart';
+import '../../presentation/screens/beneficiary/submit_case_screen.dart';
+import '../../presentation/screens/beneficiary/my_cases_screen.dart';
 import '../../presentation/screens/shared/search_screen.dart';
 import '../../presentation/screens/shared/notifications_screen.dart';
 import '../../presentation/screens/shared/settings_screen.dart';
@@ -124,6 +131,10 @@ class AppRouter {
           path: '/imam/verify',
           builder: (context, state) => const BeneficiaryVerificationScreen(),
         ),
+        GoRoute(
+          path: '/imam/notifications',
+          builder: (context, state) => const ImamNotificationsScreen(),
+        ),
         
         // Donor Routes
         GoRoute(
@@ -144,6 +155,18 @@ class AppRouter {
             return DonationScreen(caseId: caseId);
           },
         ),
+        GoRoute(
+          path: '/donor/notifications',
+          builder: (context, state) => const DonorNotificationsScreen(),
+        ),
+        GoRoute(
+          path: '/donor/browse',
+          builder: (context, state) => const BrowseCasesScreen(),
+        ),
+        GoRoute(
+          path: '/donor/history',
+          builder: (context, state) => const DonationHistoryScreen(),
+        ),
         
         // Beneficiary Routes
         GoRoute(
@@ -156,6 +179,22 @@ class AppRouter {
             final caseId = state.pathParameters['id'] ?? '';
             return CaseProgressScreen(caseId: caseId);
           },
+        ),
+        GoRoute(
+          path: '/beneficiary/notifications',
+          builder: (context, state) => const BeneficiaryNotificationsScreen(),
+        ),
+        GoRoute(
+          path: '/beneficiary/submit-case',
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            final editId = extra?['editId'] as String?;
+            return SubmitCaseScreen(editCaseId: editId);
+          },
+        ),
+        GoRoute(
+          path: '/beneficiary/my-cases',
+          builder: (context, state) => const MyCasesScreen(),
         ),
         
         // Shared Routes

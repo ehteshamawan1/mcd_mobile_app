@@ -10,7 +10,9 @@ import '../../../presentation/providers/case_provider.dart';
 import '../../../presentation/providers/auth_provider.dart';
 
 class SubmitCaseScreen extends StatefulWidget {
-  const SubmitCaseScreen({super.key});
+  final String? editCaseId;
+  
+  const SubmitCaseScreen({super.key, this.editCaseId});
 
   @override
   State<SubmitCaseScreen> createState() => _SubmitCaseScreenState();
@@ -27,6 +29,34 @@ class _SubmitCaseScreenState extends State<SubmitCaseScreen> {
   
   CaseType _selectedType = CaseType.medical;
   final List<String> _uploadedDocuments = [];
+  bool _isEditing = false;
+  CaseModel? _editingCase;
+  
+  @override
+  void initState() {
+    super.initState();
+    if (widget.editCaseId != null) {
+      _isEditing = true;
+      _loadCaseForEditing();
+    }
+  }
+  
+  void _loadCaseForEditing() async {
+    final caseProvider = Provider.of<CaseProvider>(context, listen: false);
+    _editingCase = await caseProvider.getCaseById(widget.editCaseId!);
+    
+    if (_editingCase != null) {
+      setState(() {
+        _titleController.text = _editingCase!.title;
+        _descriptionController.text = _editingCase!.description;
+        _targetAmountController.text = _editingCase!.targetAmount.toStringAsFixed(0);
+        _locationController.text = _editingCase!.location;
+        _mosqueController.text = _editingCase!.mosqueName;
+        _selectedType = _editingCase!.type;
+        _uploadedDocuments.addAll(_editingCase!.documentUrls);
+      });
+    }
+  }
 
 
   @override
@@ -78,7 +108,7 @@ class _SubmitCaseScreenState extends State<SubmitCaseScreen> {
       return;
     }
 
-    if (_uploadedDocuments.isEmpty) {
+    if (_uploadedDocuments.isEmpty && !_isEditing) {
       Fluttertoast.showToast(
         msg: 'Please upload at least one supporting document',
         toastLength: Toast.LENGTH_SHORT,
@@ -104,33 +134,49 @@ class _SubmitCaseScreenState extends State<SubmitCaseScreen> {
       return;
     }
 
-    final newCase = CaseModel(
-      id: _uuid.v4(),
-      beneficiaryName: user.name,
-      beneficiaryId: user.id,
-      title: _titleController.text,
-      description: _descriptionController.text,
-      type: _selectedType,
-      targetAmount: double.parse(_targetAmountController.text),
-      raisedAmount: 0,
-      location: _locationController.text.isNotEmpty ? _locationController.text : user.location,
-      mosqueId: _uuid.v4(),
-      mosqueName: _mosqueController.text,
-      isImamVerified: false,
-      isAdminApproved: false,
-      status: CaseStatus.pending,
-      createdAt: DateTime.now(),
-      documentUrls: _uploadedDocuments,
-      imageUrls: [],
-    );
-
-    final success = await caseProvider.createCase(newCase);
+    bool success;
+    
+    if (_isEditing && _editingCase != null) {
+      // Update existing case
+      final updatedCase = _editingCase!.copyWith(
+        title: _titleController.text,
+        description: _descriptionController.text,
+        type: _selectedType,
+        targetAmount: double.parse(_targetAmountController.text),
+        location: _locationController.text.isNotEmpty ? _locationController.text : user.location,
+        mosqueName: _mosqueController.text,
+        documentUrls: _uploadedDocuments,
+      );
+      success = await caseProvider.updateCase(updatedCase);
+    } else {
+      // Create new case
+      final newCase = CaseModel(
+        id: _uuid.v4(),
+        beneficiaryName: user.name,
+        beneficiaryId: user.id,
+        title: _titleController.text,
+        description: _descriptionController.text,
+        type: _selectedType,
+        targetAmount: double.parse(_targetAmountController.text),
+        raisedAmount: 0,
+        location: _locationController.text.isNotEmpty ? _locationController.text : user.location,
+        mosqueId: _uuid.v4(),
+        mosqueName: _mosqueController.text,
+        isImamVerified: false,
+        isAdminApproved: false,
+        status: CaseStatus.pending,
+        createdAt: DateTime.now(),
+        documentUrls: _uploadedDocuments,
+        imageUrls: [],
+      );
+      success = await caseProvider.createCase(newCase);
+    }
 
     if (!mounted) return;
 
     if (success) {
       Fluttertoast.showToast(
-        msg: 'Case submitted successfully',
+        msg: _isEditing ? 'Case updated successfully' : 'Case submitted successfully',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: AppTheme.successColor,
@@ -510,9 +556,9 @@ class _SubmitCaseScreenState extends State<SubmitCaseScreen> {
                                 ),
                               ),
                             )
-                          : const Text(
-                              'Submit Case',
-                              style: TextStyle(
+                          : Text(
+                              _isEditing ? 'Update Case' : 'Submit Case',
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: AppTheme.whiteColor,

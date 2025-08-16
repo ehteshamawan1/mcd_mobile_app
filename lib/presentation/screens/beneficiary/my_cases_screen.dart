@@ -275,7 +275,7 @@ class _MyCasesScreenState extends State<MyCasesScreen>
                               color: Colors.orange,
                             ),
                             onPressed: () {
-                              context.push('/beneficiary/submit-case?editId=${caseItem.id}');
+                              context.push('/beneficiary/submit-case', extra: {'editId': caseItem.id});
                             },
                           ),
                       ],

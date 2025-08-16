@@ -433,6 +433,63 @@ Created mock services for:
 
 ---
 
+## Dashboard Maintenance and UI Improvements
+**Date**: 2025-08-16
+**Version**: 1.2.0
+
+### Major Features Added
+1. **Role-Specific Notification System**:
+   - Added notification button to Imam dashboard (was missing)
+   - Created separate notification screens for each role:
+     - ImamNotificationsScreen with verification and report notifications
+     - DonorNotificationsScreen with donation and impact notifications
+     - BeneficiaryNotificationsScreen with case status notifications
+   - Each screen has custom filtering and role-appropriate notifications
+
+2. **Dashboard UI Improvements**:
+   - Fixed "Cases Supported" text wrapping issue on donor dashboard
+   - Standardized stat card sizing across all dashboards using FittedBox
+   - Uniform icon sizes (24px) and font sizes (20px for values)
+   - Consistent responsive design for all container cards
+
+3. **Navigation & Routing Fixes**:
+   - Added routes for /donor/browse and /donor/history
+   - Added routes for /beneficiary/submit-case and /beneficiary/my-cases
+   - Fixed edit case routing with proper extra parameters
+   - All quick action buttons now properly navigate
+
+4. **Beneficiary Case Management**:
+   - Implemented case editing functionality
+   - Fixed routing issue for edit button (was using query params, now uses extra)
+   - Added editCaseId parameter to SubmitCaseScreen
+   - Dynamic button text: "Submit Case" vs "Update Case"
+
+5. **Welcome Card Consistency**:
+   - Centered content in all welcome cards (CrossAxisAlignment.center)
+   - Uniform styling across Imam, Donor, and Beneficiary dashboards
+   - Consistent padding and text alignment
+
+### Technical Improvements
+- Fixed async/await issue in _loadCaseForEditing
+- Added copyWith support for case updates
+- Proper state management with setState for form updates
+- Clean separation of notification logic per user role
+
+### Code Quality
+- Flutter analyze: **1 error fixed** (invalid_assignment)
+- Only deprecation warnings remain (non-breaking)
+- All critical and fatal errors resolved
+- Clean, maintainable code structure
+
+### Files Modified
+- Created 3 new notification screens
+- Updated app_router.dart with 9 new routes
+- Modified all 3 dashboard screens
+- Enhanced SubmitCaseScreen with edit capability
+- Fixed MyCasesScreen edit navigation
+
+---
+
 **Last Updated**: 2025-08-16
-**Total Development Time**: ~10 hours
-**Status**: Production ready - All critical bugs fixed
+**Total Development Time**: ~11 hours
+**Status**: Production ready - All dashboard features complete and polished
