@@ -8,6 +8,7 @@ class CaseProvider extends ChangeNotifier {
   List<CaseModel> _cases = [];
   List<CaseModel> _filteredCases = [];
   List<CaseModel> _userCases = [];
+  String? _currentUserId;
   bool _isLoading = false;
   String _errorMessage = '';
   
@@ -61,6 +62,7 @@ class CaseProvider extends ChangeNotifier {
 
   Future<void> loadUserCases(String userId) async {
     _isLoading = true;
+    _currentUserId = userId;
     notifyListeners();
 
     try {
@@ -93,6 +95,10 @@ class CaseProvider extends ChangeNotifier {
     try {
       await Future.delayed(const Duration(seconds: 2));
       _cases.add(newCase);
+      // Update user cases if this case belongs to the current user being tracked
+      if (_currentUserId != null && _currentUserId == newCase.beneficiaryId) {
+        _userCases.add(newCase);
+      }
       _applyFilters();
       notifyListeners();
       return true;
@@ -208,5 +214,10 @@ class CaseProvider extends ChangeNotifier {
       _applyFilters();
       notifyListeners();
     }
+  }
+  
+  // Alias for updateCaseProgress for clarity
+  void updateCaseRaisedAmount(String caseId, double amount) {
+    updateCaseProgress(caseId, amount);
   }
 }

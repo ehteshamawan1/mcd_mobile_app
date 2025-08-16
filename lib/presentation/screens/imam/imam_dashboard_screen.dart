@@ -137,7 +137,7 @@ class ImamDashboardScreen extends StatelessWidget {
                       label: 'Add Case',
                       color: AppTheme.primaryColor,
                       onTap: () {
-                        // Navigate to add case
+                        context.push('/imam/create-case');
                       },
                     ),
                   ),
@@ -145,10 +145,10 @@ class ImamDashboardScreen extends StatelessWidget {
                   Expanded(
                     child: _ActionButton(
                       icon: Icons.verified_user,
-                      label: 'Verify',
+                      label: 'Verify Cases',
                       color: Colors.green,
                       onTap: () {
-                        // Navigate to verification
+                        context.push('/imam/verify');
                       },
                     ),
                   ),
@@ -199,7 +199,7 @@ class ImamDashboardScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to add case
+          context.push('/imam/create-case');
         },
         backgroundColor: AppTheme.primaryColor,
         child: const Icon(Icons.add),

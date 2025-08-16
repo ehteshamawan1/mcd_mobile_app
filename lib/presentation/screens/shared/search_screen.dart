@@ -18,7 +18,6 @@ class _SearchScreenState extends State<SearchScreen> {
   
   CaseType? _selectedType;
   String? _selectedLocation;
-  CaseStatus? _selectedStatus;
   bool _showFilters = false;
   
   @override
@@ -308,7 +307,6 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       _selectedType = null;
       _selectedLocation = null;
-      _selectedStatus = null;
       _minAmountController.clear();
       _maxAmountController.clear();
       _searchController.clear();
@@ -317,10 +315,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
   
   void _applyFilters() {
-    final minAmount = double.tryParse(_minAmountController.text);
-    final maxAmount = double.tryParse(_maxAmountController.text);
-    
-    // Apply amount range filter
+    // TODO: Implement amount range filtering logic
+    // double.tryParse(_minAmountController.text);
+    // double.tryParse(_maxAmountController.text);
     
     setState(() {
       _showFilters = false;

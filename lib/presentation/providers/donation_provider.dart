@@ -93,7 +93,7 @@ class DonationProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> makeDonation(DonationModel donation) async {
+  Future<bool> makeDonation(DonationModel donation, {Function(double)? onDonationSuccess}) async {
     _isProcessing = true;
     _errorMessage = '';
     notifyListeners();
@@ -103,6 +103,12 @@ class DonationProvider extends ChangeNotifier {
       await Future.delayed(const Duration(seconds: 3));
       
       _donations.add(donation);
+      
+      // Call the callback to update case amount if provided
+      if (onDonationSuccess != null) {
+        onDonationSuccess(donation.amount);
+      }
+      
       notifyListeners();
       return true;
     } catch (e) {

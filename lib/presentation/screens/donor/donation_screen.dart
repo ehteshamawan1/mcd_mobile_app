@@ -71,6 +71,7 @@ class _DonationScreenState extends State<DonationScreen> {
 
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final donationProvider = Provider.of<DonationProvider>(context, listen: false);
+      final caseProvider = Provider.of<CaseProvider>(context, listen: false);
       
       final amount = selectedAmount ?? double.tryParse(_amountController.text) ?? 0;
       
@@ -85,7 +86,13 @@ class _DonationScreenState extends State<DonationScreen> {
         status: 'completed',
       );
 
-      final success = await donationProvider.makeDonation(donation);
+      final success = await donationProvider.makeDonation(
+        donation,
+        onDonationSuccess: (donationAmount) {
+          // Update the case's raised amount
+          caseProvider.updateCaseRaisedAmount(widget.caseId, donationAmount);
+        },
+      );
 
       if (mounted) {
         setState(() {

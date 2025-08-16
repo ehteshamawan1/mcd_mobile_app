@@ -37,12 +37,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
   // Role-specific controllers
   final _mosqueNameController = TextEditingController();
   final _mosqueAddressController = TextEditingController();
+  final _muazzinKhadimController = TextEditingController();
+  final _prayerCountController = TextEditingController();
   final _occupationController = TextEditingController();
   final _monthlyIncomeController = TextEditingController();
   final _familyMembersController = TextEditingController();
   
   String? _selectedCity;
   bool _agreedToTerms = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize phone field with +92 prefix
+    _phoneController.text = '+92';
+    _phoneController.addListener(() {
+      if (!_phoneController.text.startsWith('+92')) {
+        _phoneController.text = '+92';
+        _phoneController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _phoneController.text.length),
+        );
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -54,6 +71,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _locationController.dispose();
     _mosqueNameController.dispose();
     _mosqueAddressController.dispose();
+    _muazzinKhadimController.dispose();
+    _prayerCountController.dispose();
     _occupationController.dispose();
     _monthlyIncomeController.dispose();
     _familyMembersController.dispose();
@@ -107,6 +126,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         additionalInfo = {
           'mosqueName': _mosqueNameController.text,
           'mosqueAddress': _mosqueAddressController.text,
+          'muazzinKhadim': _muazzinKhadimController.text,
+          'prayerCount': _prayerCountController.text,
         };
         break;
       case UserRole.donor:
@@ -388,6 +409,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter mosque address';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _muazzinKhadimController,
+                    decoration: InputDecoration(
+                      labelText: 'Muazzin/Khadim Name',
+                      prefixIcon: Icon(Icons.person_outline, color: roleColor),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Muazzin/Khadim name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _prayerCountController,
+                    decoration: InputDecoration(
+                      labelText: 'People Who Pray at Mosque',
+                      hintText: 'Approximate number',
+                      prefixIcon: Icon(Icons.groups, color: roleColor),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter approximate prayer count';
                       }
                       return null;
                     },

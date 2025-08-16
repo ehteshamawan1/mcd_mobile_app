@@ -7,6 +7,10 @@ class MosqueModel extends Equatable {
   final String city;
   final String imamId;
   final String imamName;
+  final String? muazzinName;
+  final String? contactNumber;
+  final String? email;
+  final int prayerCount;
   final bool isVerified;
   final DateTime createdAt;
 
@@ -17,6 +21,10 @@ class MosqueModel extends Equatable {
     required this.city,
     required this.imamId,
     required this.imamName,
+    this.muazzinName,
+    this.contactNumber,
+    this.email,
+    this.prayerCount = 0,
     required this.isVerified,
     required this.createdAt,
   });
@@ -29,6 +37,10 @@ class MosqueModel extends Equatable {
       city: json['city'] as String,
       imamId: json['imamId'] as String,
       imamName: json['imamName'] as String,
+      muazzinName: json['muazzinName'] as String?,
+      contactNumber: json['contactNumber'] as String?,
+      email: json['email'] as String?,
+      prayerCount: json['prayerCount'] as int? ?? 0,
       isVerified: json['isVerified'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
@@ -42,6 +54,10 @@ class MosqueModel extends Equatable {
       'city': city,
       'imamId': imamId,
       'imamName': imamName,
+      'muazzinName': muazzinName,
+      'contactNumber': contactNumber,
+      'email': email,
+      'prayerCount': prayerCount,
       'isVerified': isVerified,
       'createdAt': createdAt.toIso8601String(),
     };
@@ -54,6 +70,10 @@ class MosqueModel extends Equatable {
     String? city,
     String? imamId,
     String? imamName,
+    String? muazzinName,
+    String? contactNumber,
+    String? email,
+    int? prayerCount,
     bool? isVerified,
     DateTime? createdAt,
   }) {
@@ -64,6 +84,10 @@ class MosqueModel extends Equatable {
       city: city ?? this.city,
       imamId: imamId ?? this.imamId,
       imamName: imamName ?? this.imamName,
+      muazzinName: muazzinName ?? this.muazzinName,
+      contactNumber: contactNumber ?? this.contactNumber,
+      email: email ?? this.email,
+      prayerCount: prayerCount ?? this.prayerCount,
       isVerified: isVerified ?? this.isVerified,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -77,6 +101,10 @@ class MosqueModel extends Equatable {
         city,
         imamId,
         imamName,
+        muazzinName,
+        contactNumber,
+        email,
+        prayerCount,
         isVerified,
         createdAt,
       ];

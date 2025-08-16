@@ -83,6 +83,8 @@ class _CaseManagementScreenState extends State<CaseManagementScreen>
           indicatorColor: AppTheme.primaryColor,
           labelColor: AppTheme.primaryColor,
           unselectedLabelColor: AppTheme.greyColor,
+          isScrollable: true,
+          labelPadding: const EdgeInsets.symmetric(horizontal: 20),
           onTap: (index) {
             setState(() {
               switch (index) {

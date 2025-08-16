@@ -173,7 +173,7 @@ class _MyCasesScreenState extends State<MyCasesScreen>
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () {
-                // Navigate to submit case
+                context.push('/beneficiary/submit-case');
               },
               icon: const Icon(Icons.add, color: AppTheme.whiteColor),
               label: const Text(
@@ -275,7 +275,7 @@ class _MyCasesScreenState extends State<MyCasesScreen>
                               color: Colors.orange,
                             ),
                             onPressed: () {
-                              // Edit case
+                              context.push('/beneficiary/submit-case?editId=${caseItem.id}');
                             },
                           ),
                       ],

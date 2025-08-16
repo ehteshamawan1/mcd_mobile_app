@@ -134,35 +134,48 @@ class _HelpScreenState extends State<HelpScreen> {
           
           // Category Chips
           Container(
-            height: 50,
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _categories.length,
-              itemBuilder: (context, index) {
-                final category = _categories[index];
-                final isSelected = category == _selectedCategory;
-                
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    label: Text(category),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      setState(() {
-                        _selectedCategory = category;
-                      });
-                    },
-                    backgroundColor: AppTheme.whiteColor,
-                    selectedColor: AppTheme.primaryColor,
-                    labelStyle: TextStyle(
-                      color: isSelected ? AppTheme.whiteColor : AppTheme.primaryColor,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                    side: BorderSide(
-                      color: isSelected ? AppTheme.primaryColor : Colors.grey[300]!,
-                    ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: _categories.map((category) {
+                      final isSelected = category == _selectedCategory;
+                      
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: FilterChip(
+                          label: Text(
+                            category,
+                            style: TextStyle(
+                              fontSize: constraints.maxWidth < 400 ? 12 : 14,
+                            ),
+                          ),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              _selectedCategory = category;
+                            });
+                          },
+                          backgroundColor: AppTheme.whiteColor,
+                          selectedColor: AppTheme.primaryColor,
+                          labelStyle: TextStyle(
+                            color: isSelected ? AppTheme.whiteColor : AppTheme.primaryColor,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontSize: constraints.maxWidth < 400 ? 12 : 14,
+                          ),
+                          side: BorderSide(
+                            color: isSelected ? AppTheme.primaryColor : Colors.grey[300]!,
+                          ),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          visualDensity: constraints.maxWidth < 400 
+                              ? VisualDensity.compact 
+                              : VisualDensity.standard,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 );
               },
@@ -259,38 +272,55 @@ class _HelpScreenState extends State<HelpScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildQuickActionButton(
-                icon: Icons.book,
-                label: 'User Guide',
-                onTap: () {
-                  // Open user guide
-                },
-              ),
-              _buildQuickActionButton(
-                icon: Icons.play_circle,
-                label: 'Video Tutorials',
-                onTap: () {
-                  // Open video tutorials
-                },
-              ),
-              _buildQuickActionButton(
-                icon: Icons.email,
-                label: 'Email Us',
-                onTap: () {
-                  // Open email
-                },
-              ),
-              _buildQuickActionButton(
-                icon: Icons.phone,
-                label: 'Call Us',
-                onTap: () {
-                  // Make phone call
-                },
-              ),
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // Determine number of columns based on screen width
+              int crossAxisCount = 2;
+              if (constraints.maxWidth > 600) {
+                crossAxisCount = 4;
+              } else if (constraints.maxWidth > 400) {
+                crossAxisCount = 2;
+              }
+              
+              final actions = [
+                _buildQuickActionButton(
+                  icon: Icons.book,
+                  label: 'User Guide',
+                  onTap: () {
+                    // Open user guide
+                  },
+                ),
+                _buildQuickActionButton(
+                  icon: Icons.play_circle,
+                  label: 'Video Tutorials',
+                  onTap: () {
+                    // Open video tutorials
+                  },
+                ),
+                _buildQuickActionButton(
+                  icon: Icons.email,
+                  label: 'Email Us',
+                  onTap: () {
+                    // Open email
+                  },
+                ),
+                _buildQuickActionButton(
+                  icon: Icons.phone,
+                  label: 'Call Us',
+                  onTap: () {
+                    // Make phone call
+                  },
+                ),
+              ];
+              
+              return GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                childAspectRatio: 1.2,
+                children: actions,
+              );
+            },
           ),
         ],
       ),
@@ -435,15 +465,36 @@ class _HelpScreenState extends State<HelpScreen> {
   void _contactSupport() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(24),
+          width: double.infinity,
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
+            minHeight: MediaQuery.of(context).size.height * 0.3,
+          ),
+          padding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 24,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Handle indicator
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
               const Text(
                 'Contact Support',
                 style: TextStyle(
@@ -453,37 +504,117 @@ class _HelpScreenState extends State<HelpScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              ListTile(
-                leading: const Icon(Icons.phone, color: AppTheme.primaryColor),
-                title: const Text('Call Support'),
-                subtitle: const Text('+92 300 1234567'),
-                onTap: () {
-                  // Make phone call
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.email, color: AppTheme.primaryColor),
-                title: const Text('Email Support'),
-                subtitle: const Text('support@mcdapp.com'),
-                onTap: () {
-                  // Open email
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.chat, color: AppTheme.primaryColor),
-                title: const Text('Live Chat'),
-                subtitle: const Text('Available 9 AM - 6 PM'),
-                onTap: () {
-                  // Open live chat
-                  Navigator.pop(context);
-                },
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildContactOption(
+                        icon: Icons.phone,
+                        title: 'Call Support',
+                        subtitle: '+92 300 1234567',
+                        onTap: () {
+                          // Make phone call
+                          Navigator.pop(context);
+                        },
+                      ),
+                      _buildContactOption(
+                        icon: Icons.email,
+                        title: 'Email Support',
+                        subtitle: 'support@mcdapp.com',
+                        onTap: () {
+                          // Open email
+                          Navigator.pop(context);
+                        },
+                      ),
+                      _buildContactOption(
+                        icon: Icons.chat,
+                        title: 'Live Chat',
+                        subtitle: 'Available 9 AM - 6 PM',
+                        onTap: () {
+                          // Open live chat
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildContactOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: AppTheme.primaryColor,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey[400],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

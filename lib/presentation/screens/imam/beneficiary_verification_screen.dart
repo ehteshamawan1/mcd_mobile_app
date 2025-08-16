@@ -60,7 +60,7 @@ class _BeneficiaryVerificationScreenState
         backgroundColor: AppTheme.whiteColor,
         elevation: 0,
         title: const Text(
-          'Beneficiary Verification',
+          'Verify Beneficiary Cases',
           style: TextStyle(
             color: AppTheme.primaryColor,
             fontWeight: FontWeight.bold,

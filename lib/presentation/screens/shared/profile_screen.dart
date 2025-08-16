@@ -178,6 +178,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 24),
                       
+                      // Role-specific Information
+                      if (user?.role == UserRole.imam && user?.additionalInfo != null) ...[
+                        _buildSectionHeader('Mosque Information', roleColor),
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                _buildInfoRow(
+                                  'Mosque Name',
+                                  user?.additionalInfo?['mosqueName'] ?? 'Not set',
+                                  Icons.mosque,
+                                  roleColor,
+                                ),
+                                _buildDivider(),
+                                _buildInfoRow(
+                                  'Mosque Address',
+                                  user?.additionalInfo?['mosqueAddress'] ?? 'Not set',
+                                  Icons.location_on,
+                                  roleColor,
+                                ),
+                                _buildDivider(),
+                                _buildInfoRow(
+                                  'Muazzin/Khadim',
+                                  user?.additionalInfo?['muazzinKhadim'] ?? 'Not set',
+                                  Icons.person_outline,
+                                  roleColor,
+                                ),
+                                _buildDivider(),
+                                _buildInfoRow(
+                                  'Prayer Count',
+                                  '${user?.additionalInfo?['prayerCount'] ?? '0'} people',
+                                  Icons.groups,
+                                  roleColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                      
                       // Settings Section
                       _buildSectionHeader('Settings', roleColor),
                       Card(

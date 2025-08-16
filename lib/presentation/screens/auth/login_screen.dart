@@ -27,6 +27,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final _phoneController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Initialize phone field with +92 prefix
+    _phoneController.text = '+92';
+    _phoneController.addListener(() {
+      if (!_phoneController.text.startsWith('+92')) {
+        _phoneController.text = '+92';
+        _phoneController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _phoneController.text.length),
+        );
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _cnicController.dispose();
     _phoneController.dispose();

@@ -20,6 +20,7 @@ import '../../presentation/screens/shared/search_screen.dart';
 import '../../presentation/screens/shared/notifications_screen.dart';
 import '../../presentation/screens/shared/settings_screen.dart';
 import '../../presentation/screens/shared/help_screen.dart';
+import '../../presentation/screens/shared/mosque_library_screen.dart';
 import '../../data/models/user_model.dart';
 
 class AppRouter {
@@ -168,6 +169,10 @@ class AppRouter {
         GoRoute(
           path: '/help',
           builder: (context, state) => const HelpScreen(),
+        ),
+        GoRoute(
+          path: '/mosque-library',
+          builder: (context, state) => const MosqueLibraryScreen(),
         ),
       ],
     );

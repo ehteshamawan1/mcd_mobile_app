@@ -21,25 +21,21 @@ class _SubmitCaseScreenState extends State<SubmitCaseScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _targetAmountController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _mosqueController = TextEditingController();
   final _uuid = const Uuid();
   
   CaseType _selectedType = CaseType.medical;
-  String _selectedMosque = 'Jamia Masjid Karachi';
   final List<String> _uploadedDocuments = [];
 
-  final List<String> _mosques = [
-    'Jamia Masjid Karachi',
-    'Faisal Mosque Islamabad',
-    'Badshahi Mosque Lahore',
-    'Masjid-e-Tooba Karachi',
-    'Data Darbar Mosque Lahore',
-  ];
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
     _targetAmountController.dispose();
+    _locationController.dispose();
+    _mosqueController.dispose();
     super.dispose();
   }
 
@@ -117,9 +113,9 @@ class _SubmitCaseScreenState extends State<SubmitCaseScreen> {
       type: _selectedType,
       targetAmount: double.parse(_targetAmountController.text),
       raisedAmount: 0,
-      location: user.location,
+      location: _locationController.text.isNotEmpty ? _locationController.text : user.location,
       mosqueId: _uuid.v4(),
-      mosqueName: _selectedMosque,
+      mosqueName: _mosqueController.text,
       isImamVerified: false,
       isAdminApproved: false,
       status: CaseStatus.pending,
@@ -145,6 +141,8 @@ class _SubmitCaseScreenState extends State<SubmitCaseScreen> {
       _titleController.clear();
       _descriptionController.clear();
       _targetAmountController.clear();
+      _locationController.clear();
+      _mosqueController.clear();
       setState(() {
         _uploadedDocuments.clear();
         _selectedType = CaseType.medical;
@@ -355,27 +353,34 @@ class _SubmitCaseScreenState extends State<SubmitCaseScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Mosque Selection
-              DropdownButtonFormField<String>(
-                value: _selectedMosque,
+              // Location
+              TextFormField(
+                controller: _locationController,
                 decoration: const InputDecoration(
-                  labelText: 'Select Mosque',
-                  prefixIcon: Icon(Icons.mosque, color: Colors.green),
+                  labelText: 'Location',
+                  hintText: 'Enter your city/area',
+                  prefixIcon: Icon(Icons.location_on, color: Colors.green),
                 ),
-                items: _mosques.map((mosque) {
-                  return DropdownMenuItem(
-                    value: mosque,
-                    child: Text(mosque),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedMosque = value!;
-                  });
-                },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please select a mosque';
+                    return 'Please enter your location';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Mosque Name
+              TextFormField(
+                controller: _mosqueController,
+                decoration: const InputDecoration(
+                  labelText: 'Mosque Name',
+                  hintText: 'Enter the name of your local mosque',
+                  prefixIcon: Icon(Icons.mosque, color: Colors.green),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter mosque name';
                   }
                   return null;
                 },
