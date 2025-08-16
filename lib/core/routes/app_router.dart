@@ -11,6 +11,7 @@ import '../../presentation/screens/imam/imam_main_screen.dart';
 import '../../presentation/screens/imam/case_details_screen.dart';
 import '../../presentation/screens/imam/create_case_screen.dart';
 import '../../presentation/screens/imam/edit_case_screen.dart';
+import '../../presentation/screens/imam/beneficiary_verification_screen.dart';
 import '../../presentation/screens/donor/donor_main_screen.dart';
 import '../../presentation/screens/donor/case_details_screen.dart';
 import '../../presentation/screens/donor/donation_screen.dart';
@@ -118,6 +119,10 @@ class AppRouter {
             final caseId = state.pathParameters['id'] ?? '';
             return EditCaseScreen(caseId: caseId);
           },
+        ),
+        GoRoute(
+          path: '/imam/verify',
+          builder: (context, state) => const BeneficiaryVerificationScreen(),
         ),
         
         // Donor Routes

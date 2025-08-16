@@ -305,7 +305,7 @@ class _StatCard extends StatelessWidget {
                 value,
                 style: TextStyle(
                   color: color,
-                  fontSize: isMonetary ? 16 : 20,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),

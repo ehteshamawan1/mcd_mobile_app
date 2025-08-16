@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/utils/color_utils.dart';
+import '../../../data/models/case_model.dart';
+import '../../../presentation/providers/case_provider.dart';
+import '../../../presentation/providers/auth_provider.dart';
 
 class BeneficiaryVerificationScreen extends StatefulWidget {
   const BeneficiaryVerificationScreen({super.key});
@@ -379,17 +383,65 @@ class _BeneficiaryVerificationScreenState
   }
 
   void _approveVerification(String id, String name) {
+    final caseProvider = Provider.of<CaseProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    
+    // Find the beneficiary data
+    final beneficiary = _pendingVerifications.firstWhere((b) => b['id'] == id);
+    
+    // Create a new case from the verified beneficiary
+    final newCase = CaseModel(
+      id: 'case_${DateTime.now().millisecondsSinceEpoch}',
+      beneficiaryName: beneficiary['name'],
+      beneficiaryId: beneficiary['id'],
+      title: beneficiary['needDescription'].toString().substring(0, 
+          beneficiary['needDescription'].toString().length > 50 ? 50 : beneficiary['needDescription'].toString().length),
+      description: beneficiary['needDescription'],
+      type: _getCaseTypeFromNeed(beneficiary['needType'] ?? 'other'),
+      targetAmount: double.tryParse(beneficiary['requestedAmount'] ?? '50000') ?? 50000,
+      raisedAmount: 0,
+      location: beneficiary['location'] ?? 'Unknown',
+      mosqueId: authProvider.user?.additionalInfo?['mosqueId'] ?? 'mosque_001',
+      mosqueName: authProvider.user?.additionalInfo?['mosqueName'] ?? 'Unknown Mosque',
+      isImamVerified: true,
+      isAdminApproved: false,
+      status: CaseStatus.pending,
+      createdAt: DateTime.now(),
+      documentUrls: (beneficiary['documents'] as List<dynamic>?)?.cast<String>() ?? [],
+      imageUrls: [],
+    );
+    
+    // Add the case to the provider
+    caseProvider.addCase(newCase);
+    
     setState(() {
       _pendingVerifications.removeWhere((b) => b['id'] == id);
     });
     
     Fluttertoast.showToast(
-      msg: '$name has been verified successfully',
+      msg: '$name has been verified and case created successfully',
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: AppTheme.successColor,
       textColor: AppTheme.whiteColor,
     );
+  }
+  
+  CaseType _getCaseTypeFromNeed(String needType) {
+    switch (needType.toLowerCase()) {
+      case 'medical':
+        return CaseType.medical;
+      case 'education':
+        return CaseType.education;
+      case 'emergency':
+        return CaseType.emergency;
+      case 'housing':
+        return CaseType.housing;
+      case 'food':
+        return CaseType.food;
+      default:
+        return CaseType.other;
+    }
   }
 
   void _rejectVerification(String id, String name) {

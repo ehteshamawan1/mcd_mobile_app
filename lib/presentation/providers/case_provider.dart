@@ -111,6 +111,12 @@ class CaseProvider extends ChangeNotifier {
     }
   }
 
+  void addCase(CaseModel newCase) {
+    _cases.add(newCase);
+    _applyFilters();
+    notifyListeners();
+  }
+
   Future<bool> updateCase(CaseModel updatedCase) async {
     _isLoading = true;
     notifyListeners();
