@@ -112,8 +112,9 @@ class ImamDashboardScreen extends StatelessWidget {
                     child: _StatCard(
                       title: 'Total Raised',
                       value: 'PKR ${_calculateTotalRaised(caseProvider)}',
-                      icon: Icons.attach_money,
+                      icon: Icons.monetization_on,
                       color: AppTheme.secondaryColor,
+                      isMonetary: true,
                     ),
                   ),
                 ],
@@ -270,12 +271,14 @@ class _StatCard extends StatelessWidget {
   final String value;
   final IconData icon;
   final Color color;
+  final bool isMonetary;
 
   const _StatCard({
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
+    this.isMonetary = false,
   });
 
   @override
@@ -286,7 +289,7 @@ class _StatCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: color, size: 28),
+            Icon(icon, color: color, size: 24),
             const SizedBox(height: 8),
             Text(
               title,
@@ -295,12 +298,16 @@ class _StatCard extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            Text(
-              value,
-              style: TextStyle(
-                color: color,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                style: TextStyle(
+                  color: color,
+                  fontSize: isMonetary ? 16 : 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
